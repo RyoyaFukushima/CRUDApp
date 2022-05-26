@@ -1,7 +1,7 @@
 app/Http/Controller
-
+database/migrations/
 resources/views
 
 route/
 
-以下のファイルで実装時のめもなどをコメントで記述しています。よろしければご覧ください。
+以上のファイルで実装時のメモなどをコメントで記述しています。よろしければご覧ください。
