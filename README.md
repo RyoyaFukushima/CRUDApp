@@ -1,5 +1,7 @@
 app/Http/Controller
+
 database/migrations/
+
 resources/views
 
 route/
