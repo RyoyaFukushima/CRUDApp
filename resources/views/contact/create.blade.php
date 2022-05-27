@@ -14,6 +14,15 @@
                         </div>
                     @endif
                     HERE IS CREATE
+                @if($errors->any())    
+                <div class="alert alert-danger">
+                    <ul> <!-- Errorを全部取るメソッド 一つ一つ取り出すこともできる error('param'); -->
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach    
+                    </ul>
+                </div>
+                @endif
                 <form method="POST" action="{{route('contact.store')}}">
                     @csrf
                     氏名
