@@ -17,6 +17,11 @@
                     <button type="submit" class="btn btn-primary">
                         新規登録
                     </button>
+                    </form>
+                    <form method="GET" action="{{route('contact.index')}}" actionclass="form-inline my-2 my-lg-0" >
+                        <input class="form-control mr-sm-2" name="search" type="search" placeholder="名前検索" aria-label="Search" style="width:200px;">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">検索する</button>
+                    </form>
                     HERE IS INDEX
                     <table class="table">
                         <thead>
@@ -39,6 +44,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <!-- 未指定だとLaravelのページネーションがデフォルトでTailwind(cssフレームワーク)互換になってると崩れる -->
+                    <!-- インスタンスメソッドを使えばページとページ内アイテムの取得の仕方を変えれる(古い順、IDの順など)-->
+                    {{ $contacts ->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

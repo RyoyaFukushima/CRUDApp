@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::resource('contacts','App\Http\Controllers\ContactFormController');
+// kokokamo?
+//Route::resource('contacts','App\Http\Controllers\ContactFormController');
 
 // 認証するrouteをまとめることができる
 // ->name();で任意の名前のrouteにできる

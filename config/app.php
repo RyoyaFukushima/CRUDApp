@@ -107,8 +107,8 @@ return [
     | localized telephone numbers, street address information and more.
     |
     */
-
-    'faker_locale' => 'en_US',
+    // これで日本語のダミーデータを出せる
+    'faker_locale' => 'ja_JP',
 
     /*
     |--------------------------------------------------------------------------

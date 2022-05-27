@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ContactForm;
+// 切り離した処理のuse
+use App\Services\CheckFormData;
+// バリデーションクラスのuse
+use App\Http\Requests\StoreContactForm;
 // クエリビルダ用のuse
 use Illuminate\Support\Facades\DB;
-
+// ファットコントローラー:コントローラーが大きくなること
 class ContactFormController extends Controller
 {
     /**
@@ -14,15 +18,33 @@ class ContactFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
         // モデルのデータすべて
         //$contacts = ContactForm::all();
         // クエリビルダを使ってデータをとる
-        $contacts = DB::table('contact_forms')
+        /*$contacts = DB::table('contact_forms')
         ->select('id', 'your_name', 'title', 'created_at')
         ->orderBy('created_at', 'desc')
-        ->get();
+        // ページ分け表示の関数
+        ->paginate(20);*/
+        $query = DB::table('contact_forms');
+
+        if($search !== null){
+            // 全角は半角にする
+            $search_split = mb_convert_kana($search,'s');
+            // 空白で区切る
+            $search_split2 = preg_split('/[\s]+/',$search_split, -1, PREG_SPLIT_NO_EMPTY);
+            
+            foreach($search_split2 as $value){
+                $query->where('your_name','like', '%'.$value.'%');
+            }   
+        }
+        $query->select('id', 'your_name', 'title', 'created_at');
+        $query->orderBy('created_at', 'asc');
+        // ページ分け表示の関数
+        $contacts = $query->paginate(20);
         // .　がフォルダの区切り
         return view('contact.index',compact('contacts'));
     }
@@ -44,7 +66,7 @@ class ContactFormController extends Controller
      * @return \Illuminate\Http\Response
      */
     // laravelではRequestクラスでデータをもってこれる $_POSTでやってたこと
-    public function store(Request $request)
+    public function store(StoreContactForm $request)
     {
         $contact = new ContactForm;
 
@@ -73,34 +95,9 @@ class ContactFormController extends Controller
     {
         $contact = ContactForm::find($id);
         //$gender = '';
-        // 教材ではif文の連続でした
-        if($contact->gender === 0){
-            $gender = '男性';
-        }elseif($contact->gender === 1){
-            $gender = '女性';
-        }
-        $agevalue = $contact->age;
-
-        switch($agevalue){
-            case 1:
-                $age ='~19歳';
-            break;    
-            case 2:
-                $age ='20~29歳';
-            break;
-            case 3:
-                $age ='30~39歳';
-            break;
-            case 4:
-                $age ='40~49歳';
-            break;
-            case 5:
-                $age ='50~59歳';
-            break;
-            case 6:
-                $age ='60歳~';
-            break;
-        }
+        $gender = CheckFormData::checkgender($contact);
+        $age = CheckFormData::checkage($contact);
+   
         return view('contact.show', compact('contact', 'gender', 'age')); // 変数は複数渡せる
     }
 
